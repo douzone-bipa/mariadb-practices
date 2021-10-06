@@ -26,18 +26,35 @@ public class EmployeeDao {
 			conn = DriverManager.getConnection(url, "hr", "hr");
 			
 			//3. SQL 준비
-			String sql = "select emp_no, first_name, from employees where first_name like ?";
+			String sql = 
+					"select emp_no," +
+					"       first_name," +
+					"       last_name," +
+					"       date_format(hire_date, '%Y-%m-%d')" +
+					"  from employees" +
+					" where first_name like ?" +
+					"    or last_name like ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			//4. binding
-			pstmt.setString(1, "%" + keyword + "%");
+			pstmt.setString(1, "%" + name + "%");
+			pstmt.setString(2, "%" + name + "%");
 			
 			//5. SQL 실행
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
-				Long empNo = rs.getLong(1);
+				Long no = rs.getLong(1);
 				String firstName = rs.getString(2);
-				System.out.println(empNo + ":" + firstName);
+				String lastName = rs.getString(3);
+				String hireDate = rs.getNString(4);
+				
+				EmployeeVo vo = new EmployeeVo();
+				vo.setNo(no);
+				vo.setFirstName(firstName);
+				vo.setLastName(lastName);
+				vo.setHireDate(hireDate);
+				
+				result.add(vo);
 			}
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패:" + e);

@@ -15,7 +15,7 @@ public class HRMain01 {
 		List<EmployeeVo> result = dao.findByName(name);
 		
 		for(EmployeeVo vo : result) {
-			System.out.println(vo);
+			System.out.println(vo.getNo() + ":" + vo.getFirstName() + ":" + vo.getLastName() + ":" + vo.getHireDate());
 		}
 		
 		scanner.close();
